@@ -10,4 +10,9 @@ class StykkaEcommApplicationTests {
 	void contextLoads() {
 	}
 
+
+	@Test
+	void userCanBeCreated(){
+
+	}
 }
