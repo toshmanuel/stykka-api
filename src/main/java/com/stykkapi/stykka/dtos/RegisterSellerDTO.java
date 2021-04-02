@@ -1,4 +1,4 @@
 package com.stykkapi.stykka.dtos;
 
-public class UserDto {
+public class RegisterSellerDTO {
 }

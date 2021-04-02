@@ -1,24 +1,21 @@
 package com.stykkapi.stykka.models;
 
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-
-
 @Data
-@Document(collection = "users")
+@Document(collection = "sellers")
 @NoArgsConstructor
-
-public class User {
+public class Seller{
     @Id
-    private String userId;
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String password;
-    //    private List<Address> listOfAddresses;
+    private String sellerId;
+    private String sellerFirstName;
+    private String sellerLastName;
+    private String sellerEmail;
+    private String sellerPassword;
     private String storeName;
     private String bankName;
     private String accountNumber;

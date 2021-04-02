@@ -1,6 +1,5 @@
 package com.stykkapi.stykka.models;
 
-import com.stykkapi.stykka.repositories.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 class UserTest {
@@ -59,7 +56,7 @@ class UserTest {
 
         userRepository.save(secondUser);
 
-        User newUser = userRepository.findAll().get(0 );
+        User newUser = userRepository.findAll().get(0);
         userRepository.delete(newUser);
         assertEquals(userRepository.count(), 1);
     }
