@@ -3,6 +3,7 @@ package com.stykkapi.stykka.controllers;
 
 import com.stykkapi.stykka.dtos.RegisterBuyerDTO;
 import com.stykkapi.stykka.exceptions.EmailExistsException;
+import com.stykkapi.stykka.exceptions.InvalidPasswordException;
 import com.stykkapi.stykka.models.Buyer;
 import com.stykkapi.stykka.services.BuyerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class BuyerController {
     private BuyerService buyerService;
 
     @PostMapping(value = "/register")
-    public ResponseEntity<?> registerBuyer(@RequestBody RegisterBuyerDTO newBuyer){
+    public ResponseEntity<?> registerBuyer(@RequestBody RegisterBuyerDTO newBuyer) {
         try {
             buyerService.registerBuyer(newBuyer);
         } catch (EmailExistsException e) {
@@ -36,14 +37,23 @@ public class BuyerController {
     }
 
     @GetMapping(value = "/{id}")
-    public Buyer getBuyerById(@PathVariable String id){
+    public Buyer getBuyerById(@PathVariable String id) {
 
         Optional<Buyer> optionalBuyer = buyerService.getOneBuyer(id);
         return optionalBuyer.orElse(null);
     }
 
     @PatchMapping(value = "/{buyerId}")
-    public Buyer updateBuyerInfo(@RequestBody Buyer buyerToUpdate, @PathVariable String buyerId){
+    public Buyer updateBuyerInfo(@RequestBody Buyer buyerToUpdate, @PathVariable String buyerId) {
         return buyerService.updateBuyer(buyerToUpdate, buyerId);
+    }
+
+    @PutMapping(value = "/{buyerId}")
+    public Object updateBuyerPassword(@RequestBody Buyer buyerToUpdate, @PathVariable String buyerId) {
+        try {
+            return buyerService.updateBuyerPassword(buyerToUpdate, buyerId);
+        } catch (InvalidPasswordException e) {
+            return e.getLocalizedMessage();
+        }
     }
 }
