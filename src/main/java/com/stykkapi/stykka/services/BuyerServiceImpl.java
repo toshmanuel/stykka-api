@@ -19,15 +19,16 @@ public class BuyerServiceImpl implements BuyerService{
 
     @Override
     public Buyer registerBuyer(RegisterBuyerDTO newBuyer) throws EmailExistsException {
-
         Buyer buyer = new Buyer();
-        buyer.setBuyerFirstName(newBuyer.getFirstName());
-        buyer.setBuyerLastName(newBuyer.getLastName());
-        buyer.setBuyerEmail(newBuyer.getEmail());
-        buyer.setBuyerPassword(newBuyer.getPassword());
         Optional<Buyer> optionalBuyer = buyerDb.findByBuyerEmail(buyer.getBuyerEmail());
         if(optionalBuyer.isPresent()) throw new EmailExistsException("Email already exists");
-        saveBuyerToDb(buyer);
+        else{
+            buyer.setBuyerFirstName(newBuyer.getFirstName());
+            buyer.setBuyerLastName(newBuyer.getLastName());
+            buyer.setBuyerEmail(newBuyer.getEmail());
+            buyer.setBuyerPassword(newBuyer.getPassword());
+            saveBuyerToDb(buyer);
+        }
         return buyer;
     }
 

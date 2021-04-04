@@ -11,8 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class BuyerTest {
@@ -57,7 +56,7 @@ class BuyerTest {
 
     @Test
     void shouldUpdateBuyerDetails(){
-        Optional<Buyer> buyer1 = buyerDb.findById("60674f6f3ad01f4396e77b41");
+        Optional<Buyer> buyer1 = buyerDb.findById("6068c07d95089910133f2b1b");
         buyer1.get().setBuyerFirstName("Jane");
         buyerDb.save(buyer1.get());
         assertEquals("Jane", buyer1.get().getBuyerFirstName());
@@ -65,7 +64,7 @@ class BuyerTest {
 
     @Test
     void shouldCheckBuyerDetails(){
-        Optional<Buyer> buyer2 = buyerDb.findById("60674f6f3ad01f4396e77b41");
+        Optional<Buyer> buyer2 = buyerDb.findById("6068c07d95089910133f2b1b");
         assertEquals("Jane", buyer2.get().getBuyerFirstName());
     }
 

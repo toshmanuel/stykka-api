@@ -34,20 +34,30 @@ class BuyerServiceImplTest {
 
     @Test
     void shouldThrowAnExceptionIfBuyerEmailAlreadyExists(){
-        Buyer buyer = new Buyer();
         RegisterBuyerDTO newBuyer = new RegisterBuyerDTO();
         newBuyer.setFirstName("Jane");
         newBuyer.setLastName("Jones");
         newBuyer.setEmail("jones11@gmail.com");
         newBuyer.setPassword("jones112");
-
-        buyer.setBuyerFirstName(newBuyer.getFirstName());
-        buyer.setBuyerLastName(newBuyer.getLastName());
-        buyer.setBuyerEmail(newBuyer.getEmail());
-        buyer.setBuyerPassword(newBuyer.getPassword());
-
         assertThrows(EmailExistsException.class, () -> buyerService.registerBuyer(newBuyer));
 //        assertEquals(3, buyerDb.count());
+    }
+
+    @Test
+    void shouldCreateABuyer(){
+
+        RegisterBuyerDTO newBuyer = new RegisterBuyerDTO();
+        newBuyer.setFirstName("Janey");
+        newBuyer.setLastName("Joneses");
+        newBuyer.setEmail("jones112111@gmail.com");
+        newBuyer.setPassword("jones112");
+
+        try{
+            Buyer buyer2 = buyerService.registerBuyer(newBuyer);
+        }catch(EmailExistsException e){
+            e.getLocalizedMessage();
+        }
+
     }
 
     @Test
