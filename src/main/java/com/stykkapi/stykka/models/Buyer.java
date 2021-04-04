@@ -18,5 +18,6 @@ public class Buyer{
     private String buyerLastName;
     private String buyerEmail;
     private String buyerPassword;
+    private String newPassword;
     private List<Address> addresses;
 }
