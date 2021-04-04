@@ -41,4 +41,9 @@ public class BuyerController {
         Optional<Buyer> optionalBuyer = buyerService.getOneBuyer(id);
         return optionalBuyer.orElse(null);
     }
+
+    @PatchMapping(value = "/{buyerId}")
+    public Buyer updateBuyerInfo(@RequestBody Buyer buyerToUpdate, @PathVariable String buyerId){
+        return buyerService.updateBuyer(buyerToUpdate, buyerId);
+    }
 }
