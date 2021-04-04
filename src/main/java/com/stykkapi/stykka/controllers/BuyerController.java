@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/buyer")
@@ -32,5 +33,12 @@ public class BuyerController {
     @GetMapping(value = "/all")
     public List<Buyer> getAll() {
         return buyerService.getAllBuyers();
+    }
+
+    @GetMapping(value = "/{id}")
+    public Buyer getBuyerById(@PathVariable String id){
+
+        Optional<Buyer> optionalBuyer = buyerService.getOneBuyer(id);
+        return optionalBuyer.orElse(null);
     }
 }
