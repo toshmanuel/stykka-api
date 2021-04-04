@@ -56,4 +56,9 @@ public class BuyerController {
             return e.getLocalizedMessage();
         }
     }
+
+    @DeleteMapping(value = "/{buyerId}")
+    public Optional<Buyer> deleteBuyer(@PathVariable String buyerId){
+        return buyerService.deleteBuyer(buyerId);
+    }
 }
