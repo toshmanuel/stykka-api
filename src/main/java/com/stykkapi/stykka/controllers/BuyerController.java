@@ -8,19 +8,18 @@ import com.stykkapi.stykka.services.BuyerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
-@RequestMapping(value = "/register")
+@RequestMapping(value = "/buyer")
 public class BuyerController {
 
     @Autowired
     private BuyerService buyerService;
 
-    @PostMapping(value = "/buyer")
+    @PostMapping(value = "/register")
     public ResponseEntity<?> registerBuyer(@RequestBody RegisterBuyerDTO newBuyer){
         try {
             buyerService.registerBuyer(newBuyer);
@@ -28,5 +27,10 @@ public class BuyerController {
             return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.ALREADY_REPORTED);
         }
         return new ResponseEntity<>(newBuyer.toString() + "\n\nSuccessfully Registered", HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping(value = "/all")
+    public List<Buyer> getAll() {
+        return buyerService.getAllBuyers();
     }
 }
