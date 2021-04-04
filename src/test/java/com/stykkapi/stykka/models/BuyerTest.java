@@ -57,7 +57,7 @@ class BuyerTest {
 
     @Test
     void shouldUpdateBuyerDetails(){
-        Optional<Buyer> buyer1 = buyerDb.findById("60674f6f3ad01f4396e77b41");
+        Optional<Buyer> buyer1 = buyerDb.findById("606a033d7031b77f0064910f");
         buyer1.get().setBuyerFirstName("Jane");
         buyerDb.save(buyer1.get());
         assertEquals("Jane", buyer1.get().getBuyerFirstName());
@@ -65,13 +65,13 @@ class BuyerTest {
 
     @Test
     void shouldCheckBuyerDetails(){
-        Optional<Buyer> buyer2 = buyerDb.findById("60674f6f3ad01f4396e77b41");
+        Optional<Buyer> buyer2 = buyerDb.findById("606a033d7031b77f0064910f");
         assertEquals("Jane", buyer2.get().getBuyerFirstName());
     }
 
     @Test
     void shouldDeleteABuyer(){
-        Optional<Buyer> buyer2 = buyerDb.findById("60675175dc380d6ed3a7a71b");
+        Optional<Buyer> buyer2 = buyerDb.findById("606a033d7031b77f0064910e");
         buyerDb.deleteById(buyer2.get().getBuyerId());
         assertEquals(1, buyerDb.count());
     }
