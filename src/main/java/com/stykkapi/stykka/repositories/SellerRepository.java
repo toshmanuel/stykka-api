@@ -9,5 +9,5 @@ public interface SellerRepository extends MongoRepository<Seller, String> {
 
     Optional<Seller> deleteBySellerId(String sellerId);
 
-    Optional<Seller> findSellerEmail(String sellerEmail);
+    Optional<Seller> findSellerBySellerEmail(String sellerEmail);
 }
