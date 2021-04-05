@@ -1,7 +1,9 @@
 package com.stykkapi.stykka.services;
 
+import com.stykkapi.stykka.dtos.ChangeBuyerPasswordDTO;
 import com.stykkapi.stykka.dtos.RegisterBuyerDTO;
 import com.stykkapi.stykka.exceptions.EmailExistsException;
+import com.stykkapi.stykka.exceptions.InvalidPasswordException;
 import com.stykkapi.stykka.models.Buyer;
 import com.stykkapi.stykka.repositories.BuyerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,9 +55,11 @@ public class BuyerServiceImpl implements BuyerService{
      * @param buyer
      * @author saucekode
      * @since 2021-05-3
+     * @return
      */
-    private void saveBuyerToDb(Buyer buyer){
+    private Buyer saveBuyerToDb(Buyer buyer){
         buyerDb.save(buyer);
+        return buyer;
     }
 
     /**
@@ -70,6 +74,7 @@ public class BuyerServiceImpl implements BuyerService{
     }
 
     /**
+     * Get a buyer by their id
      * @param buyerId
      * @return the found buyer
      */
@@ -84,47 +89,56 @@ public class BuyerServiceImpl implements BuyerService{
 
     /**
      * This finds a buyer in the database and allows them update their data
+     * if buyer is not found in db, throw NoSuchElementException found,
+     * else update their data and save in db
      * @param buyerToUpdate, buyerId
      * @return the found buyer
      */
     @Override
     public Buyer updateBuyer(Buyer buyerToUpdate, String buyerId){
         Optional<Buyer> foundBuyer = buyerDb.findByBuyerId(buyerId);
-        if(foundBuyer.isPresent()){
+        if(foundBuyer.isEmpty()){
+            throw new NoSuchElementException("Buyer with id: " + buyerId + " not found");
+        }else{
             foundBuyer.get().setBuyerFirstName(buyerToUpdate.getBuyerFirstName());
             foundBuyer.get().setBuyerLastName(buyerToUpdate.getBuyerLastName());
             foundBuyer.get().setBuyerEmail(buyerToUpdate.getBuyerEmail());
             saveBuyerToDb(foundBuyer.get());
             return foundBuyer.get();
-        }else{
-            throw new NoSuchElementException("Buyer with id: " + buyerId + " not found");
         }
     }
 
-//    @Override
-//    public Buyer updateBuyerPassword(Buyer buyerToUpdate, String buyerId) throws InvalidPasswordException, NoSuchElementException {
-//        Optional<Buyer> foundBuyer = Optional.ofNullable(buyerDb.findById(buyerId).orElseThrow(() -> new NoSuchElementException("Buyer with id: " + buyerId + " does not exist")));
-//        String oldPassword = foundBuyer.get().getBuyerPassword();
-//        foundBuyer.get().setBuyerPassword(buyerToUpdate.getBuyerPassword());
-//
-//        if(oldPassword.equals(foundBuyer.get().getBuyerPassword())){
-//            foundBuyer.get().setNewPassword(buyerToUpdate.getNewPassword());
-//            foundBuyer.get().setBuyerPassword(buyerToUpdate.getNewPassword());
-//            saveBuyerToDb(foundBuyer.get());
-//            return foundBuyer.get();
-//        }else{
-//            throw new InvalidPasswordException("Sorry, passwords don't match");
-//        }
-//    }
+    /**
+     * This updates the password of a buyer
+     * Buyer has to provide old password,
+     * then the new password can be set
+     *
+     * if new password is empty on save,
+     * set password back to old password
+     * @author saucekode
+     * @since 2021-04-5
+     * @param buyerPasswordDTO buyerId
+     * @return
+     */
 
     @Override
-    public Buyer addBuyerAddress(Buyer buyerToUpdate, String buyerId) {
-       return null;
-    }
+    public Buyer changePassword(ChangeBuyerPasswordDTO buyerPasswordDTO, String buyerId) throws InvalidPasswordException {
+        Optional<Buyer> foundBuyer = Optional.ofNullable(buyerDb.findByBuyerId(buyerId)
+                                        .orElseThrow(() -> new NoSuchElementException("Buyer with id: " + buyerId + " does not exist")));
 
-    @Override
-    public Buyer updateBuyerAddress(Buyer buyerToUpdate, String buyerId) {
-        return null;
+        String oldPassword = foundBuyer.get().getBuyerPassword();
+
+        if(oldPassword.equals(buyerPasswordDTO.getPassword())){
+            foundBuyer.get().setBuyerPassword(buyerPasswordDTO.getNewPassword());
+
+            if(buyerPasswordDTO.getNewPassword().isEmpty()){
+                foundBuyer.get().setBuyerPassword(oldPassword);
+            }
+        }else{
+            throw new InvalidPasswordException("Provide your old password");
+        }
+
+        return saveBuyerToDb(foundBuyer.get());
     }
 
     /**

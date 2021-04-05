@@ -1,7 +1,9 @@
 package com.stykkapi.stykka.services;
 
+import com.stykkapi.stykka.dtos.ChangeBuyerPasswordDTO;
 import com.stykkapi.stykka.dtos.RegisterBuyerDTO;
 import com.stykkapi.stykka.exceptions.EmailExistsException;
+import com.stykkapi.stykka.exceptions.InvalidPasswordException;
 import com.stykkapi.stykka.models.Buyer;
 import com.stykkapi.stykka.repositories.BuyerRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -15,8 +17,10 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
 @SpringBootTest
 class BuyerServiceImplTest {
+
     @Autowired
     private BuyerRepository buyerDb;
 
@@ -39,7 +43,6 @@ class BuyerServiceImplTest {
         newBuyer.setEmail("jones11@gmail.com");
         newBuyer.setPassword("jones112");
         assertThrows(EmailExistsException.class, () -> buyerService.registerBuyer(newBuyer));
-//        assertEquals(3, buyerDb.count());
     }
 
     @Test
@@ -56,7 +59,6 @@ class BuyerServiceImplTest {
         }catch(EmailExistsException e){
             e.getLocalizedMessage();
         }
-
     }
 
     @Test
@@ -70,8 +72,22 @@ class BuyerServiceImplTest {
     }
 
     @Test
+    void shouldAllowBuyerChangePassword()  {
+        ChangeBuyerPasswordDTO passwordDTO = new ChangeBuyerPasswordDTO();
+        Optional<Buyer> foundBuyer = buyerDb.findByBuyerId("606a08fb4d247442f43de36c");
+        passwordDTO.setPassword("234561");
+        passwordDTO.setNewPassword("");
+        try{
+            buyerService.changePassword(passwordDTO,"606a08fb4d247442f43de36c");
+        }catch(InvalidPasswordException e){
+            System.out.println(e.getLocalizedMessage());;
+        }
+        assertEquals("234561", foundBuyer.get().getBuyerPassword());
+    }
+
+
+    @Test
     void shouldUpdateBuyerDetailIfBuyerExists() {
-//        Optional<Buyer> updatedBuyer = buyerDb.findByBuyerId("606a033d7031b77f0064910f");
 
 //        FrontEnd
         Buyer buyer = new Buyer();
@@ -85,24 +101,11 @@ class BuyerServiceImplTest {
         assertEquals("Good", buyer.getBuyerFirstName());
     }
 
-//    @Test
-//    void shouldUpdateBuyerPassword(){
-//        Optional<Buyer> updatedBuyer = buyerDb.findByBuyerId("606a08b71d80df4e98a60007");
-//        updatedBuyer.get().setBuyerPassword("jones112");
-//        updatedBuyer.get().setNewPassword("Jane55567");
-//        try{
-//            buyerService.updateBuyerPassword(updatedBuyer.get(), updatedBuyer.get().getBuyerId());
-//
-//        }catch(InvalidPasswordException | NoSuchElementException ex){
-//            ex.getLocalizedMessage();
-//        }
-//    }
+    @Test
+    void shouldAllowBuyerAddAddress(){}
 
     @Test
-    void shouldUpdateBuyerAddress(){}
-
-    @Test
-    void shouldAllowBuyerAddNewAddress(){}
+    void shouldAllowBuyerEditExistingAddress(){}
 
     @Test
     void shouldDeleteABuyer(){
