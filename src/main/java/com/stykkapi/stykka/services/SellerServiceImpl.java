@@ -21,7 +21,7 @@ public class SellerServiceImpl implements SellerService {
     public Seller registerSeller(RegisterSellerDTO newSeller) throws SellerException{
         Seller seller = new Seller();
 
-        Optional<Seller> registerSeller = sellerRepository.findSellerBySellerEmail(seller.getSellerEmail());
+        Optional<Seller> registerSeller = sellerRepository.findSellerEmail(seller.getSellerEmail());
 
         if (registerSeller.isPresent()){
              throw new SellerException("Seller Already exist");
