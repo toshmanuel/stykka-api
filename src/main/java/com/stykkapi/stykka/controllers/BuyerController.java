@@ -3,7 +3,6 @@ package com.stykkapi.stykka.controllers;
 
 import com.stykkapi.stykka.dtos.RegisterBuyerDTO;
 import com.stykkapi.stykka.exceptions.EmailExistsException;
-import com.stykkapi.stykka.exceptions.InvalidPasswordException;
 import com.stykkapi.stykka.models.Buyer;
 import com.stykkapi.stykka.services.BuyerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,14 +47,14 @@ public class BuyerController {
         return buyerService.updateBuyer(buyerToUpdate, buyerId);
     }
 
-    @PutMapping(value = "/{buyerId}")
-    public Object updateBuyerPassword(@RequestBody Buyer buyerToUpdate, @PathVariable String buyerId) {
-        try {
-            return buyerService.updateBuyerPassword(buyerToUpdate, buyerId);
-        } catch (InvalidPasswordException e) {
-            return e.getLocalizedMessage();
-        }
-    }
+//    @PutMapping(value = "/{buyerId}")
+//    public Object updateBuyerPassword(@RequestBody Buyer buyerToUpdate, @PathVariable String buyerId) {
+//        try {
+//            return buyerService.updateBuyerPassword(buyerToUpdate, buyerId);
+//        } catch (InvalidPasswordException e) {
+//            return e.getLocalizedMessage();
+//        }
+//    }
 
     @DeleteMapping(value = "/{buyerId}")
     public Optional<Buyer> deleteBuyer(@PathVariable String buyerId){

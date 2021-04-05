@@ -2,7 +2,6 @@ package com.stykkapi.stykka.services;
 
 import com.stykkapi.stykka.dtos.RegisterBuyerDTO;
 import com.stykkapi.stykka.exceptions.EmailExistsException;
-import com.stykkapi.stykka.exceptions.InvalidPasswordException;
 import com.stykkapi.stykka.models.Buyer;
 import com.stykkapi.stykka.repositories.BuyerRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -86,18 +85,18 @@ class BuyerServiceImplTest {
         assertEquals("Good", buyer.getBuyerFirstName());
     }
 
-    @Test
-    void shouldUpdateBuyerPassword(){
-        Optional<Buyer> updatedBuyer = buyerDb.findByBuyerId("606a08b71d80df4e98a60007");
-        updatedBuyer.get().setBuyerPassword("jones112");
-        updatedBuyer.get().setNewPassword("Jane55567");
-        try{
-            buyerService.updateBuyerPassword(updatedBuyer.get(), updatedBuyer.get().getBuyerId());
-
-        }catch(InvalidPasswordException | NoSuchElementException ex){
-            ex.getLocalizedMessage();
-        }
-    }
+//    @Test
+//    void shouldUpdateBuyerPassword(){
+//        Optional<Buyer> updatedBuyer = buyerDb.findByBuyerId("606a08b71d80df4e98a60007");
+//        updatedBuyer.get().setBuyerPassword("jones112");
+//        updatedBuyer.get().setNewPassword("Jane55567");
+//        try{
+//            buyerService.updateBuyerPassword(updatedBuyer.get(), updatedBuyer.get().getBuyerId());
+//
+//        }catch(InvalidPasswordException | NoSuchElementException ex){
+//            ex.getLocalizedMessage();
+//        }
+//    }
 
     @Test
     void shouldUpdateBuyerAddress(){}
