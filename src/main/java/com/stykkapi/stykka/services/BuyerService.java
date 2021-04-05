@@ -1,8 +1,10 @@
 package com.stykkapi.stykka.services;
 
 import com.stykkapi.stykka.dtos.ChangeBuyerPasswordDTO;
+import com.stykkapi.stykka.dtos.LoginDTO;
 import com.stykkapi.stykka.dtos.RegisterBuyerDTO;
 import com.stykkapi.stykka.exceptions.EmailExistsException;
+import com.stykkapi.stykka.exceptions.InvalidEmailException;
 import com.stykkapi.stykka.exceptions.InvalidPasswordException;
 import com.stykkapi.stykka.models.Buyer;
 
@@ -21,4 +23,6 @@ public interface BuyerService{
     Buyer changePassword(ChangeBuyerPasswordDTO buyerPasswordDTO, String buyerId) throws InvalidPasswordException;
 
     Optional<Buyer> deleteBuyer(String buyerId);
+
+    String loginBuyer(LoginDTO buyer) throws InvalidPasswordException, InvalidEmailException;
 }

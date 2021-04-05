@@ -1,8 +1,10 @@
 package com.stykkapi.stykka.services;
 
 import com.stykkapi.stykka.dtos.ChangeBuyerPasswordDTO;
+import com.stykkapi.stykka.dtos.LoginDTO;
 import com.stykkapi.stykka.dtos.RegisterBuyerDTO;
 import com.stykkapi.stykka.exceptions.EmailExistsException;
+import com.stykkapi.stykka.exceptions.InvalidEmailException;
 import com.stykkapi.stykka.exceptions.InvalidPasswordException;
 import com.stykkapi.stykka.models.Buyer;
 import com.stykkapi.stykka.repositories.BuyerRepository;
@@ -75,7 +77,7 @@ class BuyerServiceImplTest {
     void shouldAllowBuyerChangePassword()  {
         ChangeBuyerPasswordDTO passwordDTO = new ChangeBuyerPasswordDTO();
         Optional<Buyer> foundBuyer = buyerDb.findByBuyerId("606a08fb4d247442f43de36c");
-        passwordDTO.setPassword("234561");
+        passwordDTO.setOldPassword("234561");
         passwordDTO.setNewPassword("");
         try{
             buyerService.changePassword(passwordDTO,"606a08fb4d247442f43de36c");
@@ -102,10 +104,30 @@ class BuyerServiceImplTest {
     }
 
     @Test
+    void shouldEncryptBuyerPassword(){
+
+    }
+
+    @Test
     void shouldAllowBuyerAddAddress(){}
 
     @Test
     void shouldAllowBuyerEditExistingAddress(){}
+
+    @Test
+    void shouldAllowUserLogin() throws InvalidEmailException, InvalidPasswordException {
+        LoginDTO existingBuyer = new LoginDTO();
+        existingBuyer.setEmail("jones112111@gmail.com");
+        existingBuyer.setPassword("234561");
+
+        try{
+            buyerService.loginBuyer(existingBuyer);
+        }catch(InvalidPasswordException | InvalidEmailException e){
+            System.out.println(e.getLocalizedMessage());
+        }
+
+        assertEquals("Login successful", buyerService.loginBuyer(existingBuyer));
+    }
 
     @Test
     void shouldDeleteABuyer(){

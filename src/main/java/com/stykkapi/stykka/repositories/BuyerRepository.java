@@ -12,5 +12,6 @@ public interface BuyerRepository extends MongoRepository<Buyer, String> {
 
     Optional<Buyer> deleteBuyerByBuyerId(String buyerId);
 
-    Buyer findByBuyerPassword(String buyerPassword);
+    Optional<Buyer> findByBuyerPassword(String buyerPassword);
+
 }

@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 @Data
 public class ChangeBuyerPasswordDTO {
     @NotNull
-    private String password;
+    private String oldPassword;
     @NotNull
     private String newPassword;
 }

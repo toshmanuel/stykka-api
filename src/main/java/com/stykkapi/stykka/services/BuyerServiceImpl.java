@@ -1,8 +1,10 @@
 package com.stykkapi.stykka.services;
 
 import com.stykkapi.stykka.dtos.ChangeBuyerPasswordDTO;
+import com.stykkapi.stykka.dtos.LoginDTO;
 import com.stykkapi.stykka.dtos.RegisterBuyerDTO;
 import com.stykkapi.stykka.exceptions.EmailExistsException;
+import com.stykkapi.stykka.exceptions.InvalidEmailException;
 import com.stykkapi.stykka.exceptions.InvalidPasswordException;
 import com.stykkapi.stykka.models.Buyer;
 import com.stykkapi.stykka.repositories.BuyerRepository;
@@ -128,7 +130,7 @@ public class BuyerServiceImpl implements BuyerService{
 
         String oldPassword = foundBuyer.get().getBuyerPassword();
 
-        if(oldPassword.equals(buyerPasswordDTO.getPassword())){
+        if(oldPassword.equals(buyerPasswordDTO.getOldPassword())){
             foundBuyer.get().setBuyerPassword(buyerPasswordDTO.getNewPassword());
 
             if(buyerPasswordDTO.getNewPassword().isEmpty()){
@@ -140,6 +142,7 @@ public class BuyerServiceImpl implements BuyerService{
 
         return saveBuyerToDb(foundBuyer.get());
     }
+
 
     /**
      * This deletes a buyer by id
@@ -153,6 +156,26 @@ public class BuyerServiceImpl implements BuyerService{
         }else{
             throw new NoSuchElementException("Buyer does not exist");
         }
+    }
+
+    /**
+     * This allows an existent buyer login
+     * @param buyerEmail and buyerPassword
+     */
+
+    @Override
+    public String loginBuyer(LoginDTO existingBuyer) throws InvalidPasswordException, InvalidEmailException {
+        Optional<Buyer> foundBuyerEmail = buyerDb.findByBuyerEmail(existingBuyer.getEmail());
+        Optional<Buyer> foundBuyerPassword = buyerDb.findByBuyerPassword(existingBuyer.getPassword());
+        String loginMessage = "Login successful";
+        if(foundBuyerEmail.isEmpty()){
+            throw new InvalidEmailException("Invalid email");
+        }
+
+        if(foundBuyerPassword.isEmpty()){
+            throw new InvalidPasswordException("Invalid password");
+        }
+        return loginMessage;
     }
 
 
