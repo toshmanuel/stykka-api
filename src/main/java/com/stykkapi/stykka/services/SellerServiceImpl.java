@@ -5,11 +5,13 @@ import com.stykkapi.stykka.exceptions.SellerException;
 import com.stykkapi.stykka.models.Seller;
 import com.stykkapi.stykka.repositories.SellerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+@Service
 public class SellerServiceImpl implements SellerService {
 
 
@@ -43,8 +45,11 @@ public class SellerServiceImpl implements SellerService {
     }
 
     @Override
-    public Optional<Seller> findBySellerId(String sellerId) {
-        return findBySellerId(sellerId);
+    public Optional<Seller> findBySellerByName(String storeName) {
+        if (sellerRepository.findById(storeName).isPresent()) {
+            return findBySellerByName(storeName);
+        }else
+            throw new NoSuchElementException("Seller not found");
     }
 
     @Override

@@ -5,10 +5,13 @@ import com.stykkapi.stykka.repositories.SellerRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+@SpringBootTest
 class SellerServiceImplTest {
-
+    @Autowired
     SellerRepository sellerRepository;
 
     Seller seller;
@@ -25,15 +28,15 @@ class SellerServiceImplTest {
     @Test
     void createSeller(){
         seller.setSellerFirstName("Seller");
-        seller.setSellerLastName("");
-        seller.setSellerEmail("");
-        seller.setSellerPassword("");
-        seller.setStoreName("");
-        seller.setBankName("");
-        seller.setAccountNumber("");
+        seller.setSellerLastName("last name");
+        seller.setSellerEmail("selleremail@email.com");
+        seller.setSellerPassword("pws");
+        seller.setStoreName("my store");
+        seller.setBankName("My Bank");
+        seller.setAccountNumber("99002");
 
         sellerRepository.save(seller);
 
-        assertEquals("seller", seller.getSellerFirstName());
+        assertNotNull(seller.getSellerId());
     }
 }

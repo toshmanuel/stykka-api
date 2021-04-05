@@ -10,7 +10,7 @@ public interface SellerService {
 
     List<Seller> findAllSeller();
 
-    Optional<Seller> findBySellerId(String sellerId);
+    Optional<Seller> findBySellerByName(String sellerId);
 
     Optional<Seller> deleteSellerById(String sellerId);
 

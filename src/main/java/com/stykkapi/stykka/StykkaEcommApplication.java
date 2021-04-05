@@ -9,5 +9,4 @@ public class StykkaEcommApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(StykkaEcommApplication.class, args);
 	}
-
 }
