@@ -72,10 +72,18 @@ class BuyerServiceImplTest {
 
     @Test
     void shouldUpdateBuyerDetailIfBuyerExists() {
-        Optional<Buyer> updatedBuyer = buyerDb.findByBuyerId("60697649a1cd0a759f289bab");
-        updatedBuyer.get().setBuyerFirstName("Tarantula");
-        buyerService.updateBuyer(updatedBuyer.get(), updatedBuyer.get().getBuyerId());
-        assertEquals("Tarantula", updatedBuyer.get().getBuyerFirstName());
+//        Optional<Buyer> updatedBuyer = buyerDb.findByBuyerId("606a033d7031b77f0064910f");
+
+//        FrontEnd
+        Buyer buyer = new Buyer();
+        buyer.setBuyerFirstName("Good");
+        buyer.setBuyerLastName("Bad");
+        buyer.setBuyerEmail("Good@Bad.com");
+//        Service
+        buyerService.updateBuyer(buyer, "606a033d7031b77f0064910f");
+
+//        Assert
+        assertEquals("Good", buyer.getBuyerFirstName());
     }
 
     @Test
