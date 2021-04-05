@@ -79,9 +79,9 @@ class BuyerServiceImplTest {
     }
 
     @Test
-    void shouldUpdateBuyerPassword() throws InvalidPasswordException{
-        Optional<Buyer> updatedBuyer = buyerDb.findByBuyerId("6068c07d95089910133f2b1b");
-        updatedBuyer.get().setBuyerPassword("Jane55");
+    void shouldUpdateBuyerPassword(){
+        Optional<Buyer> updatedBuyer = buyerDb.findByBuyerId("606a08b71d80df4e98a60007");
+        updatedBuyer.get().setBuyerPassword("jones112");
         updatedBuyer.get().setNewPassword("Jane55567");
         try{
             buyerService.updateBuyerPassword(updatedBuyer.get(), updatedBuyer.get().getBuyerId());
@@ -89,7 +89,6 @@ class BuyerServiceImplTest {
         }catch(InvalidPasswordException | NoSuchElementException ex){
             ex.getLocalizedMessage();
         }
-
     }
 
     @Test

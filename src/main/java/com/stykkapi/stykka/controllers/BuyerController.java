@@ -14,28 +14,28 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(value = "/buyer")
+@RequestMapping( "/buyer")
 public class BuyerController {
 
     @Autowired
     private BuyerService buyerService;
 
-    @PostMapping(value = "/register")
+    @PostMapping( "/register")
     public ResponseEntity<?> registerBuyer(@RequestBody RegisterBuyerDTO newBuyer){
         try {
             buyerService.registerBuyer(newBuyer);
         } catch (EmailExistsException e) {
             return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.ALREADY_REPORTED);
         }
-        return new ResponseEntity<>(newBuyer.toString() + "\n\nSuccessfully Registered", HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(newBuyer.toString() + "\n\nSuccessfully Registered", HttpStatus.CREATED);
     }
 
-    @GetMapping(value = "/all")
+    @GetMapping( "/all")
     public List<Buyer> getAll() {
         return buyerService.getAllBuyers();
     }
 
-    @GetMapping(value = "/{id}")
+    @GetMapping("/{id}")
     public Buyer getBuyerById(@PathVariable String id){
 
         Optional<Buyer> optionalBuyer = buyerService.getOneBuyer(id);
