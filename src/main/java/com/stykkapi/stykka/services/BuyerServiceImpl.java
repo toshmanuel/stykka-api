@@ -4,14 +4,18 @@ import com.stykkapi.stykka.dtos.AddressDTO;
 import com.stykkapi.stykka.dtos.ChangePasswordDTO;
 import com.stykkapi.stykka.dtos.LoginDTO;
 import com.stykkapi.stykka.dtos.RegisterBuyerDTO;
+import com.stykkapi.stykka.exceptions.BuyerNotFoundException;
 import com.stykkapi.stykka.exceptions.EmailExistsException;
 import com.stykkapi.stykka.exceptions.InvalidEmailException;
 import com.stykkapi.stykka.exceptions.InvalidPasswordException;
+import com.stykkapi.stykka.models.Address;
 import com.stykkapi.stykka.models.Buyer;
+import com.stykkapi.stykka.repositories.AddressRepository;
 import com.stykkapi.stykka.repositories.BuyerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -20,6 +24,9 @@ import java.util.Optional;
 public class BuyerServiceImpl implements BuyerService{
     @Autowired
     private BuyerRepository buyerDb;
+
+    @Autowired
+    private AddressRepository addressDb;
 
     /**
      * This registers new buyers
@@ -121,10 +128,9 @@ public class BuyerServiceImpl implements BuyerService{
      * @author saucekode
      * @since 2021-04-5
      * @param buyerPasswordDTO buyerId
-     * @return
      */
     @Override
-    public Buyer changePassword(ChangePasswordDTO buyerPasswordDTO, String buyerId) throws InvalidPasswordException {
+    public void changePassword(ChangePasswordDTO buyerPasswordDTO, String buyerId) throws InvalidPasswordException {
         Optional<Buyer> foundBuyer = Optional.ofNullable(buyerDb.findByBuyerId(buyerId)
                                         .orElseThrow(() -> new NoSuchElementException("Buyer with id: " + buyerId + " does not exist")));
 
@@ -140,7 +146,7 @@ public class BuyerServiceImpl implements BuyerService{
             throw new InvalidPasswordException("Provide your old password");
         }
 
-        return saveBuyerToDb(foundBuyer.get());
+        saveBuyerToDb(foundBuyer.get());
     }
 
 
@@ -164,11 +170,9 @@ public class BuyerServiceImpl implements BuyerService{
      * @param existingBuyer
      */
     @Override
-    public String loginBuyer(LoginDTO existingBuyer) throws InvalidPasswordException, InvalidEmailException {
+    public boolean loginBuyer(LoginDTO existingBuyer) throws InvalidPasswordException, InvalidEmailException {
         Optional<Buyer> foundBuyerEmail = buyerDb.findByBuyerEmail(existingBuyer.getEmail());
         Optional<Buyer> foundBuyerPassword = buyerDb.findByBuyerPassword(existingBuyer.getPassword());
-
-        String loginMessage = "Login successful";
 
         if(foundBuyerEmail.isEmpty()){
             throw new InvalidEmailException("Invalid email");
@@ -177,20 +181,52 @@ public class BuyerServiceImpl implements BuyerService{
         if(foundBuyerPassword.isEmpty()){
             throw new InvalidPasswordException("Invalid password");
         }
-        return loginMessage;
+        return true;
     }
 
-    @Override
-    public Buyer addAddress(AddressDTO addressDTO, String buyerId) {
-        Optional<Buyer> foundBuyer = buyerDb.findByBuyerId(buyerId);
-        foundBuyer.get();
-        return null;
+
+    /**
+     * This represents the create address form
+     * if buyer exists, allow them fill the address details
+     * @param addressDTO, buyerId
+     * @return saved address to the db
+     * @author saucekode
+     * @since 2021-06-4
+     */
+
+    private  Address createAddress(AddressDTO addressDTO) {
+        Address address = new Address();
+        address.setStreetLine(addressDTO.getStreetLine());
+        address.setCity(addressDTO.getCity());
+        address.setState(addressDTO.getState());
+        address.setCountry(addressDTO.getCountry());
+        return address;
     }
 
     /**
-     * This should add address for the buyer
+     *  This adds an existing address to the buyer address hashset
+     * @param buyerId
+     * @return address info saved in the buyer db
      * @author saucekode
-     * @since 2021-05-4
+     * @since 2021-06-4
      */
+    @Override
+    public void addAddress(AddressDTO addressDTO, String buyerId) throws BuyerNotFoundException {
 
+        Optional<Buyer> optionalBuyer = buyerDb.findByBuyerId(buyerId);
+
+        if(optionalBuyer.isPresent()){
+            Buyer buyer = optionalBuyer.get();
+            Address createdAddress = createAddress(addressDTO);
+            createdAddress.setUserId(buyerId);
+            addressDb.save(createdAddress);
+
+            HashSet<Address> addresses = buyer.getAddresses();
+            addresses.add(createdAddress);
+            buyer.setAddresses(addresses);
+            buyerDb.save(buyer);
+        }else{
+            throw new BuyerNotFoundException("Buyer not found");
+        }
+    }
 }

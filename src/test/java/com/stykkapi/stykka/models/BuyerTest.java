@@ -44,12 +44,6 @@ class BuyerTest {
         buyer2.setBuyerLastName("Babygeh");
         buyer2.setBuyerPassword("buyergeh112");
         buyer2.setBuyerEmail("buye2r@gmail.com");
-        address.setStreetLine("19 Oyadiran street");
-        address.setCity("Lagos");
-        address.setState("Lagos-Sabo");
-        address.setCountry("Nigeria");
-        addresses.add(address);
-        buyer2.setAddresses(addresses);
         buyerDb.save(buyer2);
         assertNotNull(buyer2.getBuyerId());
     }

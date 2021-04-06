@@ -1,12 +1,12 @@
 package com.stykkapi.stykka.services;
 
+import com.stykkapi.stykka.dtos.AddressDTO;
 import com.stykkapi.stykka.dtos.ChangePasswordDTO;
 import com.stykkapi.stykka.dtos.LoginDTO;
 import com.stykkapi.stykka.dtos.RegisterBuyerDTO;
-import com.stykkapi.stykka.exceptions.EmailExistsException;
-import com.stykkapi.stykka.exceptions.InvalidEmailException;
-import com.stykkapi.stykka.exceptions.InvalidPasswordException;
+import com.stykkapi.stykka.exceptions.*;
 import com.stykkapi.stykka.models.Buyer;
+import com.stykkapi.stykka.repositories.AddressRepository;
 import com.stykkapi.stykka.repositories.BuyerRepository;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
@@ -18,8 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class BuyerServiceImplTest {
@@ -29,6 +28,9 @@ class BuyerServiceImplTest {
 
     @Autowired
     private BuyerService buyerService;
+
+    @Autowired
+    private AddressRepository addressDb;
 
     @BeforeEach
     void setUp() {
@@ -83,7 +85,7 @@ class BuyerServiceImplTest {
         try{
             buyerService.changePassword(passwordDTO,"606a08fb4d247442f43de36c");
         }catch(InvalidPasswordException e){
-            System.out.println(e.getLocalizedMessage());;
+            System.out.println(e.getLocalizedMessage());
         }
         assertEquals("234561", foundBuyer.get().getBuyerPassword());
     }
@@ -108,10 +110,32 @@ class BuyerServiceImplTest {
     void shouldEncryptBuyerPassword(){}
 
     @Test
-    void shouldAllowBuyerAddAddress(){}
+    void shouldCreateNewAddAddress(){
+        AddressDTO buyerAddress = new AddressDTO();
+        buyerAddress.setStreetLine("19 oyediran street");
+        buyerAddress.setCity("Yaba");
+        buyerAddress.setState("Lagos");
+        buyerAddress.setCountry("Nigeria");
+
+//        buyerService.createAddress(buyerAddress,"606a08fb4d247442f43de36c");
+
+        assertEquals("Nigeria", buyerAddress.getCountry());
+    }
 
     @Test
-    void shouldAllowBuyerEditExistingAddress(){}
+    void shouldAllowBuyerAddNewAddress(){
+        AddressDTO buyerAddress = new AddressDTO();
+        buyerAddress.setStreetLine("19 oyediran street");
+        buyerAddress.setCity("Yaba");
+        buyerAddress.setState("Lagos");
+        buyerAddress.setCountry("Nigeria");
+        try{
+            buyerService.addAddress(buyerAddress,"606a08fb4d0247442f43de36c");
+//            assertEquals(4, addressDb.count());
+        }catch(BuyerNotFoundException e){
+            e.getLocalizedMessage();
+        }
+    }
 
     @SneakyThrows
     @Test
@@ -126,7 +150,7 @@ class BuyerServiceImplTest {
             System.out.println(e.getLocalizedMessage());
         }
 
-        assertEquals("Login successful", buyerService.loginBuyer(existingBuyer));
+        assertTrue(buyerService.loginBuyer(existingBuyer));
     }
 
     @Test
