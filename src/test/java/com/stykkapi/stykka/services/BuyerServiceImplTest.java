@@ -1,6 +1,6 @@
 package com.stykkapi.stykka.services;
 
-import com.stykkapi.stykka.dtos.ChangeBuyerPasswordDTO;
+import com.stykkapi.stykka.dtos.ChangePasswordDTO;
 import com.stykkapi.stykka.dtos.LoginDTO;
 import com.stykkapi.stykka.dtos.RegisterBuyerDTO;
 import com.stykkapi.stykka.exceptions.EmailExistsException;
@@ -8,6 +8,7 @@ import com.stykkapi.stykka.exceptions.InvalidEmailException;
 import com.stykkapi.stykka.exceptions.InvalidPasswordException;
 import com.stykkapi.stykka.models.Buyer;
 import com.stykkapi.stykka.repositories.BuyerRepository;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -75,7 +76,7 @@ class BuyerServiceImplTest {
 
     @Test
     void shouldAllowBuyerChangePassword()  {
-        ChangeBuyerPasswordDTO passwordDTO = new ChangeBuyerPasswordDTO();
+        ChangePasswordDTO passwordDTO = new ChangePasswordDTO();
         Optional<Buyer> foundBuyer = buyerDb.findByBuyerId("606a08fb4d247442f43de36c");
         passwordDTO.setOldPassword("234561");
         passwordDTO.setNewPassword("");
@@ -104,9 +105,7 @@ class BuyerServiceImplTest {
     }
 
     @Test
-    void shouldEncryptBuyerPassword(){
-
-    }
+    void shouldEncryptBuyerPassword(){}
 
     @Test
     void shouldAllowBuyerAddAddress(){}
@@ -114,8 +113,9 @@ class BuyerServiceImplTest {
     @Test
     void shouldAllowBuyerEditExistingAddress(){}
 
+    @SneakyThrows
     @Test
-    void shouldAllowUserLogin() throws InvalidEmailException, InvalidPasswordException {
+    void shouldAllowUserLogin() {
         LoginDTO existingBuyer = new LoginDTO();
         existingBuyer.setEmail("jones112111@gmail.com");
         existingBuyer.setPassword("234561");

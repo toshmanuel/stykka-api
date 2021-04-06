@@ -1,6 +1,7 @@
 package com.stykkapi.stykka.services;
 
-import com.stykkapi.stykka.dtos.ChangeBuyerPasswordDTO;
+import com.stykkapi.stykka.dtos.AddressDTO;
+import com.stykkapi.stykka.dtos.ChangePasswordDTO;
 import com.stykkapi.stykka.dtos.LoginDTO;
 import com.stykkapi.stykka.dtos.RegisterBuyerDTO;
 import com.stykkapi.stykka.exceptions.EmailExistsException;
@@ -122,9 +123,8 @@ public class BuyerServiceImpl implements BuyerService{
      * @param buyerPasswordDTO buyerId
      * @return
      */
-
     @Override
-    public Buyer changePassword(ChangeBuyerPasswordDTO buyerPasswordDTO, String buyerId) throws InvalidPasswordException {
+    public Buyer changePassword(ChangePasswordDTO buyerPasswordDTO, String buyerId) throws InvalidPasswordException {
         Optional<Buyer> foundBuyer = Optional.ofNullable(buyerDb.findByBuyerId(buyerId)
                                         .orElseThrow(() -> new NoSuchElementException("Buyer with id: " + buyerId + " does not exist")));
 
@@ -147,6 +147,7 @@ public class BuyerServiceImpl implements BuyerService{
     /**
      * This deletes a buyer by id
      * @param buyerId
+     * @author saucekode
      * @return delete buyer from database
      */
     @Override
@@ -160,14 +161,15 @@ public class BuyerServiceImpl implements BuyerService{
 
     /**
      * This allows an existent buyer login
-     * @param buyerEmail and buyerPassword
+     * @param existingBuyer
      */
-
     @Override
     public String loginBuyer(LoginDTO existingBuyer) throws InvalidPasswordException, InvalidEmailException {
         Optional<Buyer> foundBuyerEmail = buyerDb.findByBuyerEmail(existingBuyer.getEmail());
         Optional<Buyer> foundBuyerPassword = buyerDb.findByBuyerPassword(existingBuyer.getPassword());
+
         String loginMessage = "Login successful";
+
         if(foundBuyerEmail.isEmpty()){
             throw new InvalidEmailException("Invalid email");
         }
@@ -178,5 +180,17 @@ public class BuyerServiceImpl implements BuyerService{
         return loginMessage;
     }
 
+    @Override
+    public Buyer addAddress(AddressDTO addressDTO, String buyerId) {
+        Optional<Buyer> foundBuyer = buyerDb.findByBuyerId(buyerId);
+        foundBuyer.get();
+        return null;
+    }
+
+    /**
+     * This should add address for the buyer
+     * @author saucekode
+     * @since 2021-05-4
+     */
 
 }
