@@ -16,6 +16,7 @@ public interface SellerService {
 
     void deleteBySellerId(String sellerId) throws SellerException;
 
+    void deleteAll(Seller seller) throws SellerException;
 
     void saveSeller(RegisterSellerDTO seller) throws SellerException;
 }

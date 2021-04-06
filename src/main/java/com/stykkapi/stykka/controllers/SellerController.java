@@ -3,6 +3,7 @@ package com.stykkapi.stykka.controllers;
 import com.stykkapi.stykka.dtos.APIResponse;
 import com.stykkapi.stykka.dtos.RegisterSellerDTO;
 import com.stykkapi.stykka.exceptions.SellerException;
+import com.stykkapi.stykka.models.Seller;
 import com.stykkapi.stykka.services.SellerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +35,17 @@ public class SellerController {
             return new ResponseEntity<>("Account deleted successfully", HttpStatus.NO_CONTENT);
         } catch (SellerException e) {
             log.debug("Error ", e);
-            System.out.println("Test");
             return new ResponseEntity<>(new APIResponse(false, e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping(value = "/deleteall")
+    public ResponseEntity<?> deleteAll(@RequestBody Seller seller){
+        try{
+            sellerService.deleteAll(seller);
+            return new ResponseEntity<>("Seller deleted successfully!", HttpStatus.NO_CONTENT);
+        }catch(SellerException e){
+            return new ResponseEntity <> (e.getLocalizedMessage(),HttpStatus.BAD_REQUEST);
         }
     }
 }

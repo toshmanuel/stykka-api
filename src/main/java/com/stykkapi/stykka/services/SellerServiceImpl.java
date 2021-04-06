@@ -61,4 +61,9 @@ public class SellerServiceImpl implements SellerService {
         else
             throw new SellerException("No seller found with that Id");
     }
+
+    @Override
+    public void deleteAll(Seller seller) throws SellerException {
+        sellerRepository.deleteAll();
+    }
 }
