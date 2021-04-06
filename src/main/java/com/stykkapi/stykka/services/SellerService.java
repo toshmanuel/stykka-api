@@ -1,5 +1,7 @@
 package com.stykkapi.stykka.services;
 
+import com.stykkapi.stykka.dtos.RegisterSellerDTO;
+import com.stykkapi.stykka.exceptions.SellerException;
 import com.stykkapi.stykka.models.Seller;
 
 import java.util.List;
@@ -12,8 +14,8 @@ public interface SellerService {
 
     Optional<Seller> findBySellerByName(String sellerId);
 
-    Optional<Seller> deleteSellerById(String sellerId);
+    void deleteBySellerId(String sellerId) throws SellerException;
 
 
-    void saveSeller(Seller seller);
+    void saveSeller(RegisterSellerDTO seller) throws SellerException;
 }

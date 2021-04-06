@@ -4,7 +4,6 @@ import com.stykkapi.stykka.dtos.RegisterSellerDTO;
 import com.stykkapi.stykka.exceptions.SellerException;
 import com.stykkapi.stykka.models.Seller;
 import com.stykkapi.stykka.repositories.SellerRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,28 +14,30 @@ import java.util.Optional;
 public class SellerServiceImpl implements SellerService {
 
 
-    @Autowired
     private SellerRepository sellerRepository;
 
-    public Seller registerSeller(RegisterSellerDTO newSeller) throws SellerException{
+    public SellerServiceImpl(SellerRepository sellerRepository) {
+        this.sellerRepository = sellerRepository;
+    }
+
+    @Override
+    public void saveSeller(RegisterSellerDTO newSeller) throws SellerException{
+        Optional<Seller> optionalSeller = sellerRepository.findSellerBySellerEmail(newSeller.getSellerEmail());
+
+        if (optionalSeller.isPresent()){
+            throw new SellerException("Seller Already exist");
+        }
         Seller seller = new Seller();
 
-        Optional<Seller> registerSeller = sellerRepository.findSellerEmail(seller.getSellerEmail());
+        seller.setSellerFirstName(newSeller.getSellerFirstName());
+        seller.setSellerLastName(newSeller.getSellerLastName());
+        seller.setSellerEmail(newSeller.getSellerEmail());
+        seller.setSellerPassword(newSeller.getSellerPassword());
+        seller.setStoreName(newSeller.getStoreName());
+        seller.setBankName(newSeller.getBankName());
+        seller.setAccountNumber(newSeller.getAccountNumber());
 
-        if (registerSeller.isPresent()){
-             throw new SellerException("Seller Already exist");
-        }
-        else
-        {
-        seller.setSellerFirstName(seller.getSellerFirstName());
-        seller.setSellerLastName(seller.getSellerLastName());
-        seller.setSellerEmail(seller.getSellerEmail());
-        seller.setSellerPassword(seller.getSellerPassword());
-        seller.setStoreName(seller.getStoreName());
-        seller.setBankName(seller.getBankName());
-        seller.setAccountNumber(seller.getAccountNumber());
-    }
-        return sellerRepository.save(seller);
+        sellerRepository.save(seller);
     }
 
     @Override
@@ -53,16 +54,11 @@ public class SellerServiceImpl implements SellerService {
     }
 
     @Override
-    public Optional<Seller> deleteSellerById(String sellerId) {
+    public void deleteBySellerId(String sellerId) throws SellerException {
         if (sellerRepository.findById(sellerId).isPresent()) {
-            return sellerRepository.deleteBySellerId(sellerId);
+            sellerRepository.deleteBySellerId(sellerId);
         }
         else
-            throw new NoSuchElementException(sellerId);
-    }
-
-    @Override
-    public void saveSeller(Seller seller) {
-        sellerRepository.save(seller);
+            throw new SellerException("No seller found with that Id");
     }
 }

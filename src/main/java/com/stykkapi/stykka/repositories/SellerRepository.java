@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface SellerRepository extends MongoRepository<Seller, String> {
 
-    Optional<Seller> deleteBySellerId(String sellerId);
+    void deleteBySellerId(String sellerId);
 
-    Optional<Seller> findSellerEmail(String sellerEmail);
+    Optional<Seller> findSellerBySellerEmail(String sellerEmail);
 }
